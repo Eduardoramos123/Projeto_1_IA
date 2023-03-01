@@ -216,6 +216,43 @@ bool validGameState(vector<vector<Position*>> gameState) {
     return true;
 }
 
+bool canMove(int pos1, int level1, int pos2, int level2, vector<vector<Position*>> gameState) {
+    Position* initial = gameState[level1][pos1];
+    vector<Position*> neighbours = initial->getNeighbours();
+
+    for (int i = 0; i < neighbours.size(); i++) {
+        int check_pos = neighbours[i]->getPos();
+        int check_level = neighbours[i]->getLevel();
+
+        if (check_level == level2 && check_pos == pos2 && gameState[check_level][check_pos]->getPiece() == nullptr) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool isStuck(vector<vector<Position*>> gameState, Piece* piece) {
+    Position* initial = gameState[piece->getLevel()][piece->getPos()];
+    vector<Position*> neighbours = initial->getNeighbours();
+
+    for (int i = 0; i < neighbours.size(); i++) {
+        int check_pos = neighbours[i]->getPos();
+        int check_level = neighbours[i]->getLevel();
+        if (canMove(piece->getPos(), piece->getLevel(), check_pos, check_level, gameState)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+vector<vector<Position*>> move(Piece* piece, int level, int pos, vector<vector<Position*>> gameState) {
+    vector<vector<Position*>> final = gameState;
+
+    final[piece->getLevel()][piece->getPos()]->setPiece(nullptr);
+    final[level][pos]->setPiece(piece);
+
+    return final;
+}
 
 int main() {
     vector<vector<Position*>> gameState = generateGameState(4, 5);
