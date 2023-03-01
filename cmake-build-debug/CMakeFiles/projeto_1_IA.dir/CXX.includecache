@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/Eduardo/Desktop/projeto_1_IA/main.cpp
+iostream
+-
+iostream
+-
+vector
+-
+cmath
+-
+string
+-
+queue
+-
+stack
+-
+
