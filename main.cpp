@@ -249,8 +249,44 @@ vector<vector<Position*>> move(Piece* piece, int level, int pos, vector<vector<P
     vector<vector<Position*>> final = gameState;
 
     final[piece->getLevel()][piece->getPos()]->setPiece(nullptr);
+    piece->setCoords(pos, level);
     final[level][pos]->setPiece(piece);
 
+    return final;
+}
+
+bool canPlace(int level, int pos, vector<vector<Position*>> gameState) {
+    if (gameState[level][pos]->getPiece() != nullptr) {
+        return false;
+    }
+
+    return true;
+}
+
+vector<vector<Position*>> place(Piece* piece, int level, int pos, vector<vector<Position*>> gameState) {
+    vector<vector<Position*>> final = gameState;
+
+    piece->setCoords(pos, level);
+    final[level][pos]->setPiece(piece);
+    return final;
+}
+
+vector<vector<char>> getSymbols(vector<vector<Position*>> gameState) {
+    vector<vector<char>> final;
+
+    for (int i = 0; i < gameState.size(); i++) {
+        vector<char> v;
+
+        for (int j = 0; j < gameState[i].size(); j++) {
+            if (gameState[i][j]->getPiece() == nullptr) {
+                v.push_back(' ');
+            }
+            else {
+                v.push_back(gameState[i][j]->getPiece()->getSym());
+            }
+        }
+        final.push_back(v);
+    }
     return final;
 }
 
@@ -263,6 +299,64 @@ int main() {
     }
     else {
         cout << "Not working" << endl;
+    }
+
+    Piece* piece_test = new Piece(1, 'x');
+    vector<vector<char>> symbols = getSymbols(gameState);
+
+    for (int i = 0; i < symbols.size(); i++) {
+        for (int j = 0; j < symbols[i].size(); j++) {
+            cout << "[" << symbols[i][j] << "] ";
+        }
+        cout << endl;
+    }
+
+    cout << "----------------------" << endl;
+
+    gameState = place(piece_test, 3, 3, gameState);
+    symbols = getSymbols(gameState);
+
+    for (int i = 0; i < symbols.size(); i++) {
+        for (int j = 0; j < symbols[i].size(); j++) {
+            cout << "[" << symbols[i][j] << "] ";
+        }
+        cout << endl;
+    }
+
+    cout << "----------------------" << endl;
+
+    if (!canPlace(3, 3, gameState)) {
+        cout << "working" << endl;
+    }
+    else {
+        cout << "not working" << endl;
+    }
+
+    cout << "----------------------" << endl;
+    if (canMove(3, 3, 2, 3, gameState)) {
+        cout << "working" << endl;
+    }
+    else {
+        cout << "not Working" << endl;
+    }
+    cout << "----------------------" << endl;
+
+    gameState = move(piece_test, 3, 2, gameState);
+    symbols = getSymbols(gameState);
+
+    for (int i = 0; i < symbols.size(); i++) {
+        for (int j = 0; j < symbols[i].size(); j++) {
+            cout << "[" << symbols[i][j] << "] ";
+        }
+        cout << endl;
+    }
+
+    cout << "----------------------" << endl;
+    if (!canMove(3, 2, 3, 0, gameState)) {
+        cout << "working" << endl;
+    }
+    else {
+        cout << "not Working" << endl;
     }
 
 
