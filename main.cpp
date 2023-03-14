@@ -14,6 +14,7 @@
 
 using namespace std;
 
+
 vector<vector<Position>> generateGameState(int level, int pos) {
     vector<vector<Position>> gameState;
 
@@ -21,6 +22,8 @@ vector<vector<Position>> generateGameState(int level, int pos) {
         vector<Position> v;
         for (int j = 0; j < pos; j++) {
             Position p = Position(i, j);
+            Piece piece = Piece();
+            p.setPiece(piece);
             v.push_back(p);
         }
         gameState.push_back(v);
@@ -71,24 +74,24 @@ vector<vector<Position>> generateConnections(vector<vector<Position>> gameState)
             else if (i % 2 != 0) {
                 if (j == 0) {
                     final[i][j].addNeighbour(final[i + 1][j + 1]);
-                    final[i][j].addNeighbour(final[i + 1][gameState[i].size() - 1]);
+                    final[i][j].addNeighbour(final[i + 1][0]);
 
                     final[i + 1][j + 1].addNeighbour(final[i][j]);
-                    final[i + 1][gameState[i].size() - 1].addNeighbour(final[i][j]);
+                    final[i + 1][0].addNeighbour(final[i][j]);
                 }
                 else if (j == (gameState[i].size() - 1)) {
                     final[i][j].addNeighbour(final[i + 1][0]);
-                    final[i][j].addNeighbour(final[i + 1][j - 1]);
+                    final[i][j].addNeighbour(final[i + 1][j]);
 
                     final[i + 1][0].addNeighbour(final[i][j]);
-                    final[i + 1][j - 1].addNeighbour(final[i][j]);
+                    final[i + 1][j].addNeighbour(final[i][j]);
                 }
                 else {
                     final[i][j].addNeighbour(final[i + 1][j + 1]);
-                    final[i][j].addNeighbour(final[i + 1][j - 1]);
+                    final[i][j].addNeighbour(final[i + 1][j]);
 
                     final[i + 1][j + 1].addNeighbour(final[i][j]);
-                    final[i + 1][j - 1].addNeighbour(final[i][j]);
+                    final[i + 1][j].addNeighbour(final[i][j]);
                 }
             }
         }
@@ -322,6 +325,121 @@ int heuristic_2_pieces_near(vector<Piece> pieces, vector<vector<Position>> gameS
     return res;
 }
 
+int heuristic_3_test(vector<Piece> pieces, vector<vector<Position>> gameState) {
+    int res1 = 0;
+    int res2 = 0;
+
+    for (auto piece : pieces) {
+        Position position = gameState[piece.getLevel()][piece.getPos()];
+        vector<Position> neighbours = position.getNeighbours();
+
+        int check1 = 0;
+        int check2 = 0;
+        for (auto & neighbour : neighbours) {
+            if (neighbour.getPiece().getSym() == ' ') {
+                continue;
+            }
+            if (neighbour.getPiece().getSym() == piece.getSym()) {
+                check1 = -10000;
+            }
+            check1++;
+            check2++;
+        }
+
+        if (check1 == 1) {
+            res1++;
+        }
+        if (check2 == 2) {
+            res2++;
+        }
+    }
+
+    return 5 * res1 - 3 * res2;
+}
+
+int heuristic_4_variety_levels(vector<Piece> pieces, vector<vector<Position>> gameState) {
+    int res1 = 0;
+    int res2 = 0;
+
+    for (auto piece : pieces) {
+        Position position = gameState[piece.getLevel()][piece.getPos()];
+        vector<Position> neighbours = position.getNeighbours();
+
+        for (auto & neighbour : neighbours) {
+            if (neighbour.getPiece().getSym() == ' ') {
+                continue;
+            }
+            if (neighbour.getPiece().getSym() == piece.getSym()) {
+                res1++;
+                break;
+            }
+            else {
+                res2++;
+                break;
+            }
+        }
+    }
+
+    return res1 - res2;
+}
+
+int heuristic_5_neighbours(vector<Piece> pieces, vector<vector<Position>> gameState) {
+    vector<vector<int>> check;
+
+    for (int i = 0; i < gameState.size(); i++) {
+        vector<int> v;
+        for (int j = 0; j < gameState[i].size(); j++) {
+            v.push_back(0);
+        }
+        check.push_back(v);
+    }
+
+    for (auto piece : pieces) {
+        Position position = gameState[piece.getLevel()][piece.getPos()];
+        vector<Position> neighbours = position.getNeighbours();
+
+        for (auto & neighbour : neighbours) {
+            if (neighbour.getPiece().getSym() == ' ') {
+                check[neighbour.getLevel()][neighbour.getPos()] = check[neighbour.getLevel()][neighbour.getPos()] + 1;
+            }
+        }
+    }
+
+    int res = 0;
+    for (int i = 0; i < check.size(); i++) {
+        for (int j = 0; j < check[i].size(); j++) {
+            if (check[i][j] > 1) {
+                res++;
+            }
+        }
+
+    }
+
+    return res;
+}
+
+int heuristic_6_hunt(vector<Piece> pieces, vector<vector<Position>> gameState) {
+    int res = 3;
+
+    for (auto piece : pieces) {
+        Position position = gameState[piece.getLevel()][piece.getPos()];
+        vector<Position> neighbours = position.getNeighbours();
+
+        int check = 0;
+        for (auto & neighbour : neighbours) {
+            if (neighbour.getPiece().getSym() == ' ') {
+                check++;
+            }
+        }
+
+        if (check < res) {
+            res = check;
+        }
+    }
+
+    return res;
+}
+
 bool heuristic_stuck(vector<Piece> pieces, vector<vector<Position>> gameState) {
     for (auto piece : pieces) {
         if (isStuck(gameState, piece)) {
@@ -374,11 +492,11 @@ int aval_AI(vector<Piece> pieces1, vector<Piece> pieces2, vector<vector<Position
         return 100000;
     }
 
-    if (about_to_win(pieces1, pieces2, gameState)) {
+    if (about_to_win(pieces2, pieces1, gameState)) {
         return -10000;
     }
 
-    return heuristic_1_piece_near(pieces1, gameState) * 5 - heuristic_2_pieces_near(pieces1, gameState) * 3 + control_center(pieces1, gameState);
+    return 3 * heuristic_5_neighbours(pieces1, gameState) + 2 * (5 - heuristic_6_hunt(pieces2, gameState)) + control_center(pieces1, gameState);
 }
 
 int aval_Player(vector<Piece> pieces1, vector<Piece> pieces2, vector<vector<Position>> gameState) {
@@ -394,10 +512,33 @@ int aval_Player(vector<Piece> pieces1, vector<Piece> pieces2, vector<vector<Posi
         return 10000;
     }
 
-    return heuristic_1_piece_near(pieces1, gameState) * -5 + heuristic_2_pieces_near(pieces1, gameState) * 3 - control_center(pieces1, gameState);
+    return -3 * heuristic_5_neighbours(pieces2, gameState) -2 * (5 - heuristic_6_hunt(pieces1, gameState)) - control_center(pieces2, gameState);
 }
 
-Node* minimax(Node* node, int depth, int maxDepth, bool AI, int alpha, int beta) {
+vector<char> convertGameSate(vector<vector<Position>> gameState) {
+    vector<char> res;
+
+    for (int i = 0; i < gameState.size(); i++) {
+        for (int j = 0; j < gameState[i].size(); j++) {
+            res.push_back(gameState[i][j].getPiece().getSym());
+        }
+    }
+    return res;
+}
+
+bool isVisited(vector<vector<char>> visited, vector<vector<Position>> gameState) {
+    vector<char> charState = convertGameSate(gameState);
+
+    for (int i = 0; i < visited.size(); i++) {
+        if (visited[i] == charState) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+Node* minimax(Node* node, int depth, int maxDepth, bool AI, int alpha, int beta, vector<vector<char>> visited) {
     if (depth == maxDepth || heuristic_stuck(node->getAI(), node->getGameState()) || heuristic_stuck(node->getPlayer(), node->getGameState())) {
         return node;
     }
@@ -421,13 +562,19 @@ Node* minimax(Node* node, int depth, int maxDepth, bool AI, int alpha, int beta)
                 }
 
                 tester = move(p, neighbour.getLevel(), neighbour.getPos(), tester);
+
+                if (isVisited(visited, tester)) {
+                    continue;
+                }
+                visited.push_back(convertGameSate(tester));
+
                 vector<Piece> piece_tester = pieces1;
                 piece_tester[i].setCoords(neighbour.getLevel(), neighbour.getPos());
 
                 new_node = new Node(piece_tester, node->getPlayer(), tester);
                 new_node->setPai(node);
 
-                Node* challenger = minimax(new_node, depth+1, maxDepth, false, alpha, beta);
+                Node* challenger = minimax(new_node, depth+1, maxDepth, false, alpha, beta, visited);
                 challenger->setEval(aval_AI(challenger->getAI(), challenger->getPlayer(), challenger->getGameState()));
                 if (challenger->getEval() > best->getEval()) {
                     best = challenger;
@@ -442,6 +589,11 @@ Node* minimax(Node* node, int depth, int maxDepth, bool AI, int alpha, int beta)
                 }
 
             }
+
+            if (beta <= alpha) {
+                break;
+            }
+
         }
         return best->getPai();
     }
@@ -464,14 +616,20 @@ Node* minimax(Node* node, int depth, int maxDepth, bool AI, int alpha, int beta)
                 }
 
                 tester = move(p, neighbour.getLevel(), neighbour.getPos(), tester);
+
+                if (isVisited(visited, tester)) {
+                    continue;
+                }
+                visited.push_back(convertGameSate(tester));
+
                 vector<Piece> piece_tester = pieces2;
                 piece_tester[i].setCoords(neighbour.getLevel(), neighbour.getPos());
 
                 new_node = new Node(node->getAI(), piece_tester, tester);
                 new_node->setPai(node);
 
-                Node* challenger = minimax(new_node, depth+1, maxDepth, true, alpha, beta);
-                challenger->setEval(aval_Player(challenger->getAI(), challenger->getPlayer(), challenger->getGameState()));
+                Node* challenger = minimax(new_node, depth+1, maxDepth, true, alpha, beta, visited);
+                challenger->setEval(aval_Player(challenger->getPlayer(), challenger->getAI(), challenger->getGameState()));
                 if (challenger->getEval() < best->getEval()) {
                     best = challenger;
                     best->setPai(new_node);
@@ -485,6 +643,11 @@ Node* minimax(Node* node, int depth, int maxDepth, bool AI, int alpha, int beta)
                 }
 
             }
+
+            if (beta <= alpha) {
+                break;
+            }
+
         }
         return best->getPai();
 
@@ -514,6 +677,8 @@ void p_vs_bot_gameloop(Node* node, int depth, int turn) {
 
     depth = switch_difficulty(depth);
 
+    vector<vector<char>> v;
+
     while (true) {
         if (turn) {
             cout << endl << "Player" << endl;
@@ -536,8 +701,8 @@ void p_vs_bot_gameloop(Node* node, int depth, int turn) {
         else {
             cout << endl << "Computer" << endl;
 
-            node = minimax(node, 0, depth, true, -1000000, 1000000);
-
+            node = minimax(node, 0, depth, true, -1000000, 1000000, v);
+            v.push_back(convertGameSate(node->getGameState()));
             printGameState(node->getGameState());
 
             if (heuristic_stuck(node->getAI(), node->getGameState())) {
@@ -557,13 +722,17 @@ void p_vs_bot_gameloop(Node* node, int depth, int turn) {
 void bot_vs_bot_gameloop(Node* node, int depth_1, int depth_2) {
     printGameState(node->getGameState());
 
-    depth_1 = switch_difficulty(depth_1);
-    depth_2 = switch_difficulty(depth_2);
+    depth_1 = depth_1;
+    depth_2 = depth_2;
+
+    vector<vector<char>> v;
 
     while (true) {
         cout << endl << "Player 1" << endl;
+        cout << "v size: " << v.size() << endl;
 
-        node = minimax(node, 0, depth_1, true, -1000000, 1000000);
+        node = minimax(node, 0, depth_1, true, -1000000, 1000000, v);
+        v.push_back(convertGameSate(node->getGameState()));
 
         printGameState(node->getGameState());
 
@@ -578,7 +747,8 @@ void bot_vs_bot_gameloop(Node* node, int depth_1, int depth_2) {
 
         cout << endl << "Player 2" << endl;
 
-        node = minimax(node, 0, depth_2, false, -1000000, 1000000);
+        node = minimax(node, 0, depth_2, false, -1000000, 1000000, v);
+        v.push_back(convertGameSate(node->getGameState()));
 
         printGameState(node->getGameState());
 
@@ -615,10 +785,10 @@ void get_game_options(int& mode, int& computer_difficulty_1, int& computer_diffi
             cout << "3. Hard" << endl;
             cout << "Enter your choice for computer 1 (1-3):";
             cin >> computer_difficulty_1;
-            if (computer_difficulty_1 >= 1 && computer_difficulty_1 <= 3) {
+            if (computer_difficulty_1 >= 1 && computer_difficulty_1 <= 8) {
                 break;
             }
-            cout << "Invalid input. Please enter a number between 1 and 3." << endl;
+            cout << "Invalid input. Please enter a number between 1 and 8." << endl;
         }
     }
 
@@ -628,9 +798,9 @@ void get_game_options(int& mode, int& computer_difficulty_1, int& computer_diffi
             cout << "1. Easy" << endl;
             cout << "2. Medium" << endl;
             cout << "3. Hard" << endl;
-            cout << "Enter your choice for computer 2 (1-3):";
+            cout << "Enter your choice for computer 2 (1-8):";
             cin >> computer_difficulty_2;
-            if (computer_difficulty_2 >= 1 && computer_difficulty_2 <= 3) {
+            if (computer_difficulty_2 >= 1 && computer_difficulty_2 <= 8) {
                 break;
             }
             cout << "Invalid input. Please enter a number between 1 and 3." << endl;
@@ -667,12 +837,15 @@ int main() {
 
     gameState = randomPlacingPhase(player1, player2, gameState);
 
+    cout << "check heuristic 5: " << heuristic_5_neighbours(player1, gameState) << endl;
+
     Node* node = new Node(player1, player2, gameState);
     node->setPai(nullptr);
 
     cout << "------------- Welcome to Bound! -------------" << endl;
     int mode, computer_difficulty_1 = 0, computer_difficulty_2 = 0;
     get_game_options(mode, computer_difficulty_1, computer_difficulty_2);
+
 
     switch (mode) {
         case 1:

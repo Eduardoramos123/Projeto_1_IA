@@ -142,6 +142,87 @@ projeto_1_IA/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\projeto_1_IA.dir\build.make CMakeFiles/projeto_1_IA.dir/build
 .PHONY : projeto_1_IA/fast
 
+Node.obj: Node.cpp.obj
+
+.PHONY : Node.obj
+
+# target to build an object file
+Node.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\projeto_1_IA.dir\build.make CMakeFiles/projeto_1_IA.dir/Node.cpp.obj
+.PHONY : Node.cpp.obj
+
+Node.i: Node.cpp.i
+
+.PHONY : Node.i
+
+# target to preprocess a source file
+Node.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\projeto_1_IA.dir\build.make CMakeFiles/projeto_1_IA.dir/Node.cpp.i
+.PHONY : Node.cpp.i
+
+Node.s: Node.cpp.s
+
+.PHONY : Node.s
+
+# target to generate assembly for a file
+Node.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\projeto_1_IA.dir\build.make CMakeFiles/projeto_1_IA.dir/Node.cpp.s
+.PHONY : Node.cpp.s
+
+Piece.obj: Piece.cpp.obj
+
+.PHONY : Piece.obj
+
+# target to build an object file
+Piece.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\projeto_1_IA.dir\build.make CMakeFiles/projeto_1_IA.dir/Piece.cpp.obj
+.PHONY : Piece.cpp.obj
+
+Piece.i: Piece.cpp.i
+
+.PHONY : Piece.i
+
+# target to preprocess a source file
+Piece.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\projeto_1_IA.dir\build.make CMakeFiles/projeto_1_IA.dir/Piece.cpp.i
+.PHONY : Piece.cpp.i
+
+Piece.s: Piece.cpp.s
+
+.PHONY : Piece.s
+
+# target to generate assembly for a file
+Piece.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\projeto_1_IA.dir\build.make CMakeFiles/projeto_1_IA.dir/Piece.cpp.s
+.PHONY : Piece.cpp.s
+
+Position.obj: Position.cpp.obj
+
+.PHONY : Position.obj
+
+# target to build an object file
+Position.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\projeto_1_IA.dir\build.make CMakeFiles/projeto_1_IA.dir/Position.cpp.obj
+.PHONY : Position.cpp.obj
+
+Position.i: Position.cpp.i
+
+.PHONY : Position.i
+
+# target to preprocess a source file
+Position.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\projeto_1_IA.dir\build.make CMakeFiles/projeto_1_IA.dir/Position.cpp.i
+.PHONY : Position.cpp.i
+
+Position.s: Position.cpp.s
+
+.PHONY : Position.s
+
+# target to generate assembly for a file
+Position.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\projeto_1_IA.dir\build.make CMakeFiles/projeto_1_IA.dir/Position.cpp.s
+.PHONY : Position.cpp.s
+
 main.obj: main.cpp.obj
 
 .PHONY : main.obj
@@ -178,6 +259,15 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... projeto_1_IA
+	@echo ... Node.obj
+	@echo ... Node.i
+	@echo ... Node.s
+	@echo ... Piece.obj
+	@echo ... Piece.i
+	@echo ... Piece.s
+	@echo ... Position.obj
+	@echo ... Position.i
+	@echo ... Position.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
