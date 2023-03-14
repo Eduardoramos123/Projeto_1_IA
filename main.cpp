@@ -453,7 +453,7 @@ bool about_to_win(vector<Piece> pieces1, vector<Piece> pieces2, vector<vector<Po
     for (auto i : pieces2) {
         vector<Position> neighbours = gameState[i.getLevel()][i.getPos()].getNeighbours();
 
-        for (const auto & neighbour : neighbours) {
+        for (auto neighbour : neighbours) {
             vector<vector<Position>> tester = gameState;
 
             if (!canMove(i.getLevel(), i.getPos(), neighbour.getLevel(), neighbour.getPos(), tester)) {
@@ -483,36 +483,66 @@ int control_center(vector<Piece> pieces, vector<vector<Position>> gameState) {
     return res;
 }
 
-int aval_AI(vector<Piece> pieces1, vector<Piece> pieces2, vector<vector<Position>> gameState) {
-    if (heuristic_stuck(pieces1, gameState)) {
-        return -100000;
-    }
+int heuristic_no_allied_pieces_near(vector<Piece> pieces, vector<vector<Position>> gameState) {
+    int res = 0;
+    for (auto i : pieces) {
+        vector<Position> neighbours = gameState[i.getLevel()][i.getPos()].getNeighbours();
 
-    if (heuristic_stuck(pieces2, gameState)) {
-        return 100000;
+        for (auto & neighbour : neighbours) {
+            if (neighbour.getPiece().getSym() == pieces[0].getSym()) {
+                res++;
+            }
+        }
     }
-
-    if (about_to_win(pieces2, pieces1, gameState)) {
-        return -10000;
-    }
-
-    return 3 * heuristic_5_neighbours(pieces1, gameState) + 2 * (5 - heuristic_6_hunt(pieces2, gameState)) + control_center(pieces1, gameState);
+    return res;
 }
 
-int aval_Player(vector<Piece> pieces1, vector<Piece> pieces2, vector<vector<Position>> gameState) {
+int aval_AI(vector<Piece> pieces1, vector<Piece> pieces2, vector<vector<Position>> gameState) {
+    int res = 0;
     if (heuristic_stuck(pieces1, gameState)) {
-        return 100000;
+        res+= -1000;
     }
 
     if (heuristic_stuck(pieces2, gameState)) {
-        return -100000;
+        res+= 1000;
     }
 
     if (about_to_win(pieces1, pieces2, gameState)) {
-        return 10000;
+        res+= -500;
     }
 
-    return -3 * heuristic_5_neighbours(pieces2, gameState) -2 * (5 - heuristic_6_hunt(pieces1, gameState)) - control_center(pieces2, gameState);
+    if (about_to_win(pieces2, pieces1, gameState)) {
+        res+= 100;
+    }
+
+
+
+    res+=  5*control_center(pieces1, gameState) - 2*heuristic_no_allied_pieces_near(pieces1, gameState);
+    return res;
+}
+
+int aval_Player(vector<Piece> pieces1, vector<Piece> pieces2, vector<vector<Position>> gameState) {
+    int res = 0;
+    if (heuristic_stuck(pieces1, gameState)) {
+        res+= 1000;
+    }
+
+    if (heuristic_stuck(pieces2, gameState)) {
+        res+= -1000;
+    }
+
+    if (about_to_win(pieces1, pieces2, gameState)) {
+        res+= 500;
+    }
+
+    if (about_to_win(pieces2, pieces1, gameState)) {
+        res+= -100;
+    }
+
+
+
+    res+= -5*control_center(pieces1, gameState) + 2*heuristic_no_allied_pieces_near(pieces1, gameState);
+    return res;
 }
 
 vector<char> convertGameSate(vector<vector<Position>> gameState) {
