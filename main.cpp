@@ -449,6 +449,52 @@ bool heuristic_stuck(vector<Piece> pieces, vector<vector<Position>> gameState) {
     return false;
 }
 
+int heuristic_liberty(vector<Piece> pieces, vector<vector<Position>> gameState) {
+    int res = 0;
+    int i = 0;
+
+    for (auto piece : pieces) {
+        Position position = gameState[piece.getLevel()][piece.getPos()];
+        vector<Position> neighbours = position.getNeighbours();
+        for (auto & neighbour : neighbours) {
+            if (neighbour.getPiece().getSym() == ' ') {
+                vector<vector<Position>> check = gameState;
+                vector<Piece> p = pieces;
+                check = move(p[i], neighbour.getLevel(), neighbour.getPos(), check);
+                p[i].setCoords(neighbour.getLevel(), neighbour.getPos());
+                if (!heuristic_stuck(p, check)) {
+                    res++;
+                }
+            }
+        }
+        i++;
+    }
+
+    return res;
+}
+
+int heuristic_vulnerable(vector<Piece> pieces, vector<vector<Position>> gameState) {
+    int res = 0;
+
+    for (auto piece : pieces) {
+        Position position = gameState[piece.getLevel()][piece.getPos()];
+        vector<Position> neighbours = position.getNeighbours();
+
+        int check = 0;
+        for (auto & neighbour : neighbours) {
+            if (neighbour.getPiece().getSym() == ' ') {
+                continue;
+            }
+            check++;
+        }
+
+        if (check == 2) {
+            res++;
+        }
+    }
+    return res;
+}
+
 bool about_to_win(vector<Piece> pieces1, vector<Piece> pieces2, vector<vector<Position>> gameState) {
     for (auto i : pieces2) {
         vector<Position> neighbours = gameState[i.getLevel()][i.getPos()].getNeighbours();
@@ -497,51 +543,74 @@ int heuristic_no_allied_pieces_near(vector<Piece> pieces, vector<vector<Position
     return res;
 }
 
+int heuristic_level_trans(vector<Piece> pieces, vector<vector<Position>> gameState) {
+    int res = 0;
+
+    for (auto piece : pieces) {
+        Position position = gameState[piece.getLevel()][piece.getPos()];
+        vector<Position> neighbours = position.getNeighbours();
+
+        int check = 0;
+        for (auto & neighbour : neighbours) {
+            if (neighbour.getPiece().getSym() == ' ' && neighbour.getLevel() != piece.getLevel()) {
+                res++;
+            }
+        }
+    }
+    return res;
+}
+
 int aval_AI(vector<Piece> pieces1, vector<Piece> pieces2, vector<vector<Position>> gameState) {
     int res = 0;
     if (heuristic_stuck(pieces1, gameState)) {
-        res+= -1000;
+        return -1000;
     }
 
     if (heuristic_stuck(pieces2, gameState)) {
-        res+= 1000;
+        return 1000;
     }
 
     if (about_to_win(pieces1, pieces2, gameState)) {
-        res+= -500;
+        return -1000;
     }
+
 
     if (about_to_win(pieces2, pieces1, gameState)) {
-        res+= 100;
+        res+= 500;
     }
 
 
 
-    res+=  5*control_center(pieces1, gameState) - 2*heuristic_no_allied_pieces_near(pieces1, gameState);
+    res+=  4*(heuristic_level_trans(pieces1, gameState) - heuristic_level_trans(pieces2, gameState));
+    res += 8*(heuristic_liberty(pieces1, gameState) - heuristic_liberty(pieces2, gameState));
+    //res += 5*heuristic_vulnerable(pieces2, gameState);
     return res;
 }
 
 int aval_Player(vector<Piece> pieces1, vector<Piece> pieces2, vector<vector<Position>> gameState) {
     int res = 0;
     if (heuristic_stuck(pieces1, gameState)) {
-        res+= 1000;
+        return 1000;
     }
 
     if (heuristic_stuck(pieces2, gameState)) {
-        res+= -1000;
+        return -1000;
     }
 
     if (about_to_win(pieces1, pieces2, gameState)) {
-        res+= 500;
+        return 1000;
     }
+
 
     if (about_to_win(pieces2, pieces1, gameState)) {
-        res+= -100;
+        res+= -500;
     }
 
 
 
-    res+= -5*control_center(pieces1, gameState) + 2*heuristic_no_allied_pieces_near(pieces1, gameState);
+    res+= -4*(heuristic_level_trans(pieces1, gameState) - heuristic_level_trans(pieces2, gameState));
+    res += -8*(heuristic_liberty(pieces1, gameState) - heuristic_liberty(pieces2, gameState));
+    //res += -5*heuristic_vulnerable(pieces2, gameState);
     return res;
 }
 
@@ -752,9 +821,6 @@ void p_vs_bot_gameloop(Node* node, int depth, int turn) {
 void bot_vs_bot_gameloop(Node* node, int depth_1, int depth_2) {
     printGameState(node->getGameState());
 
-    depth_1 = depth_1;
-    depth_2 = depth_2;
-
     vector<vector<char>> v;
 
     while (true) {
@@ -763,6 +829,9 @@ void bot_vs_bot_gameloop(Node* node, int depth_1, int depth_2) {
 
         node = minimax(node, 0, depth_1, true, -1000000, 1000000, v);
         v.push_back(convertGameSate(node->getGameState()));
+
+        node->setEval(aval_AI(node->getAI(), node->getPlayer(), node->getGameState()));
+        cout << "Aval Player 1: " << node->getEval() << endl;
 
         printGameState(node->getGameState());
 
@@ -779,6 +848,9 @@ void bot_vs_bot_gameloop(Node* node, int depth_1, int depth_2) {
 
         node = minimax(node, 0, depth_2, false, -1000000, 1000000, v);
         v.push_back(convertGameSate(node->getGameState()));
+
+        node->setEval(aval_Player(node->getPlayer(), node->getAI(), node->getGameState()));
+        cout << "Aval Player 2: " << node->getEval() << endl;
 
         printGameState(node->getGameState());
 
