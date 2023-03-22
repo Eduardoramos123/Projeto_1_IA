@@ -80,6 +80,24 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/Eduardo/Desktop/projeto_1_IA/Node.cpp">
+			<Option target="projeto_1_IA"/>
+		</Unit>
+		<Unit filename="C:/Users/Eduardo/Desktop/projeto_1_IA/Node.h">
+			<Option target="projeto_1_IA"/>
+		</Unit>
+		<Unit filename="C:/Users/Eduardo/Desktop/projeto_1_IA/Piece.cpp">
+			<Option target="projeto_1_IA"/>
+		</Unit>
+		<Unit filename="C:/Users/Eduardo/Desktop/projeto_1_IA/Piece.h">
+			<Option target="projeto_1_IA"/>
+		</Unit>
+		<Unit filename="C:/Users/Eduardo/Desktop/projeto_1_IA/Position.cpp">
+			<Option target="projeto_1_IA"/>
+		</Unit>
+		<Unit filename="C:/Users/Eduardo/Desktop/projeto_1_IA/Position.h">
+			<Option target="projeto_1_IA"/>
+		</Unit>
 		<Unit filename="C:/Users/Eduardo/Desktop/projeto_1_IA/main.cpp">
 			<Option target="projeto_1_IA"/>
 		</Unit>
