@@ -877,7 +877,9 @@ void p_vs_bot_gameloop(Node* node, int depth, int turn) {
 
             // player move
             int level, pos;
+
             vector<vector<Position>> newGameState = choose_piece_to_move(player_turn, level, pos, node->getGameState());
+
             node->setGameState(newGameState);
 
             vector<Piece> newPieces;
@@ -887,12 +889,14 @@ void p_vs_bot_gameloop(Node* node, int depth, int turn) {
                 }
                 newPieces.push_back(p);
             }
+
             if(player_turn)
                 node->setAI(newPieces);
             else
                 node->setPlayer(newPieces);
 
             v.push_back(convertGameSate(node->getGameState()));
+
 
             printGameState(node->getGameState());
 
@@ -940,7 +944,8 @@ void bot_vs_bot_gameloop(Node* node, int depth_1, int depth_2) {
     vector<vector<char>> v;
 
     while (true) {
-        cout << endl << "Player 1" << endl;
+
+        cout << endl << "Computer 1" << endl;
         cout << "v size: " << v.size() << endl;
 
         node = minimax(node, 0, depth_1, true, -1000000, 1000000, v);
@@ -951,16 +956,18 @@ void bot_vs_bot_gameloop(Node* node, int depth_1, int depth_2) {
 
         printGameState(node->getGameState());
 
+        // atualize node->getAI() (player 1)
+
         if (heuristic_stuck(node->getAI(), node->getGameState())) {
-            cout << "Player 2 WON!" << endl;
+            cout << "Computer 2 WON!" << endl;
             break;
         }
         if (heuristic_stuck(node->getPlayer(), node->getGameState())) {
-            cout << "Player 1 WON!" << endl;
+            cout << "Computer 1 WON!" << endl;
             break;
         }
 
-        cout << endl << "Player 2" << endl;
+        cout << endl << "Computer 2" << endl;
 
         node = minimax(node, 0, depth_2, false, -1000000, 1000000, v);
         v.push_back(convertGameSate(node->getGameState()));
@@ -970,12 +977,14 @@ void bot_vs_bot_gameloop(Node* node, int depth_1, int depth_2) {
 
         printGameState(node->getGameState());
 
+        // atualize node->getPlayer() (player 2)
+
         if (heuristic_stuck(node->getAI(), node->getGameState())) {
-            cout << "Player 2 WON!" << endl;
+            cout << "Computer 2 WON!" << endl;
             break;
         }
         if (heuristic_stuck(node->getPlayer(), node->getGameState())) {
-            cout << "Player 1 WON!" << endl;
+            cout << "Computer 1 WON!" << endl;
             break;
         }
     }
