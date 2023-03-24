@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iostream>
 #include <vector>
 #include <cmath>
 #include <string>
@@ -11,6 +10,9 @@
 #include "Node.h"
 #include "Position.h"
 #include "Piece.h"
+
+#include <Python.h>
+
 
 using namespace std;
 
@@ -1045,6 +1047,16 @@ void get_game_options(int& mode, int& computer_difficulty_1, int& computer_diffi
 }
 
 int main() {
+
+    Py_Initialize();
+
+    PyRun_SimpleString("from time import time,ctime\n"
+                       "print('Today is',ctime(time()))\n");
+
+    Py_Finalize();
+
+
+    /*
     vector<vector<Position>> gameState = generateGameState(4, 5);
     gameState = generateConnections(gameState);
 
@@ -1093,7 +1105,7 @@ int main() {
         default:
             break;
     }
-
+    */
 
     return 0;
 }
