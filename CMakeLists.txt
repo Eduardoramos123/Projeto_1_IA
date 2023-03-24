@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 project(projeto_1_IA)
 
 set(CMAKE_CXX_STANDARD 14)
-set(PYTHON_LIBRARY "C:/Users/andre/AppData/Local/Programs/Python/Python311/libs/python311.lib")
+set(PYTHON_LIBRARY "path/to/python/lib")
 
 find_package(PythonLibs REQUIRED)
 
