@@ -42,7 +42,7 @@ menu3.mainloop(surface)
 
 # Create initial game menu
 menu = pygame_menu.Menu('Welcome', 900, 700, theme=pygame_menu.themes.THEME_SOLARIZED)
-selectorr = menu.add.selector('Game Mode :', [('Player vs Player', 1), ('Player vs Computer', 2), ('Computer vs Computer', 3)], selector_id=0)
+selectorr = menu.add.selector('Game Mode :', [('Player vs Player', 1), ('Player vs Computer', 2), ('Computer vs Computer', 3)])
 if selectorr.get_value()[1] == 1:
     menu.add.button('Next', menu1)
 if selectorr.get_value()[1] == 2:
