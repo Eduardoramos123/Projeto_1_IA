@@ -1048,12 +1048,16 @@ void get_game_options(int& mode, int& computer_difficulty_1, int& computer_diffi
 
 int main() {
 
-    Py_Initialize();
+    Py_Initialize(); // initialize the Python interpreter
+    PyObject* object = Py_BuildValue("s", "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\teste.py");
+    FILE* file = _Py_fopen_obj(object, "r+");
 
-    PyRun_SimpleString("from time import time,ctime\n"
-                       "print('Today is',ctime(time()))\n");
+    if(file){
+        PyRun_SimpleFile(file, "path/to/python/file");
+        fclose(file);
+    }
 
-    Py_Finalize();
+    Py_Finalize(); // clean up the Python interpreter
 
 
     /*
