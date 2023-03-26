@@ -1,18 +1,17 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "CXX"
   )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/Users/Eduardo/Desktop/projeto_1_IA/Node.cpp" "C:/Users/Eduardo/Desktop/projeto_1_IA/cmake-build-debug/CMakeFiles/projeto_1_IA.dir/Node.cpp.obj"
-  "C:/Users/Eduardo/Desktop/projeto_1_IA/Piece.cpp" "C:/Users/Eduardo/Desktop/projeto_1_IA/cmake-build-debug/CMakeFiles/projeto_1_IA.dir/Piece.cpp.obj"
-  "C:/Users/Eduardo/Desktop/projeto_1_IA/Position.cpp" "C:/Users/Eduardo/Desktop/projeto_1_IA/cmake-build-debug/CMakeFiles/projeto_1_IA.dir/Position.cpp.obj"
-  "C:/Users/Eduardo/Desktop/projeto_1_IA/main.cpp" "C:/Users/Eduardo/Desktop/projeto_1_IA/cmake-build-debug/CMakeFiles/projeto_1_IA.dir/main.cpp.obj"
-  )
-set(CMAKE_CXX_COMPILER_ID "GNU")
 
-# The include file search paths:
-set(CMAKE_CXX_TARGET_INCLUDE_PATH
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/Node.cpp" "CMakeFiles/projeto_1_IA.dir/Node.cpp.obj" "gcc" "CMakeFiles/projeto_1_IA.dir/Node.cpp.obj.d"
+  "C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/Piece.cpp" "CMakeFiles/projeto_1_IA.dir/Piece.cpp.obj" "gcc" "CMakeFiles/projeto_1_IA.dir/Piece.cpp.obj.d"
+  "C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/Position.cpp" "CMakeFiles/projeto_1_IA.dir/Position.cpp.obj" "gcc" "CMakeFiles/projeto_1_IA.dir/Position.cpp.obj.d"
+  "C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/main.cpp" "CMakeFiles/projeto_1_IA.dir/main.cpp.obj" "gcc" "CMakeFiles/projeto_1_IA.dir/main.cpp.obj.d"
   )
 
 # Targets to which this target links.
