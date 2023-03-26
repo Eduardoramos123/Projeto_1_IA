@@ -358,7 +358,10 @@ CMakeFiles/projeto_1_IA.dir/main.cpp.obj: C:/Users/andre/OneDrive/Ambiente\ de\ 
   C:/Users/andre/AppData/Local/Programs/Python/Python311/include/fileutils.h \
   C:/Users/andre/AppData/Local/Programs/Python/Python311/include/cpython/fileutils.h \
   C:/Users/andre/AppData/Local/Programs/Python/Python311/include/cpython/pyfpe.h \
-  C:/Users/andre/AppData/Local/Programs/Python/Python311/include/tracemalloc.h
+  C:/Users/andre/AppData/Local/Programs/Python/Python311/include/tracemalloc.h \
+  C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/limits \
+  C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/sstream \
+  C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/bits/sstream.tcc
 
 
 C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/bits/range_access.h:
@@ -512,6 +515,8 @@ C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/m
 C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/ios:
 
 C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/iosfwd:
+
+C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/limits:
 
 C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/bits/postypes.h:
 
@@ -906,3 +911,7 @@ C:/Users/andre/AppData/Local/Programs/Python/Python311/include/fileutils.h:
 C:/Users/andre/AppData/Local/Programs/Python/Python311/include/cpython/fileutils.h:
 
 C:/Users/andre/AppData/Local/Programs/Python/Python311/include/tracemalloc.h:
+
+C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/sstream:
+
+C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/bits/sstream.tcc:

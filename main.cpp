@@ -12,6 +12,8 @@
 #include "Piece.h"
 
 #include <Python.h>
+#include <limits>
+#include <sstream>
 
 
 using namespace std;
@@ -851,6 +853,8 @@ void p_vs_p_gameloop(Node* node) {
             node->setPlayer(newPieces);
 
             printGameState(node->getGameState());
+            // Call the draw_board function
+            //PyObject* result = PyObject_CallObject(draw_board_func, NULL);
 
             if (heuristic_stuck(node->getAI(), node->getGameState())) {
                 cout << "Player 2 WON!" << endl;
@@ -998,9 +1002,8 @@ void get_game_options(int& mode, int& computer_difficulty_1, int& computer_diffi
         if (mode >= 1 && mode <= 3) {
             break;
         }
-        cout << "Invalid input. Please enter a number between 1 and 3." << endl;
     }
-
+    cout << endl << mode << endl;
     if (mode == 2 || mode == 3) {
         while (true) {
             cout << "Please select a difficulty level for the computer:" << endl;
@@ -1012,7 +1015,6 @@ void get_game_options(int& mode, int& computer_difficulty_1, int& computer_diffi
             if (computer_difficulty_1 >= 1 && computer_difficulty_1 <= 8) {
                 break;
             }
-            cout << "Invalid input. Please enter a number between 1 and 8." << endl;
         }
     }
 
@@ -1043,6 +1045,7 @@ void get_game_options(int& mode, int& computer_difficulty_1, int& computer_diffi
 
 int main() {
 
+    // initialization of py_game
     Py_Initialize();
     PyObject* object = Py_BuildValue("s", "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\py_display\\teste.py");
     FILE* file = _Py_fopen_obj(object, "r+");
@@ -1052,37 +1055,20 @@ int main() {
         fclose(file);
     }
 
+    PyObject* object2 = Py_BuildValue("s", "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\py_display\\board.py");
+    FILE* file2 = _Py_fopen_obj(object2, "r+");
+
+    if(file2){
+        PyRun_SimpleFile(file2, "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\py_display\\board.py");
+        fclose(file);
+    }
+
     // Import the board module
     PyObject* board_module = PyImport_ImportModule("board");
 
     // Get a reference to the draw_board function
     PyObject* draw_board_func = PyObject_GetAttrString(board_module, "draw_board");
 
-
-    //PyObject* display_board_func = PyObject_GetAttrString(module, "draw_board");
-
-
-    /*Py_Initialize(); // initialize the Python interpreter
-    PyObject* object = Py_BuildValue("s", "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\display\\board.py");
-    FILE* file = _Py_fopen_obj(object, "r+");
-
-    if(file){
-        PyRun_SimpleFile(file, "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\display\\board.py");
-        fclose(file);
-    }
-
-    PyObject* module_name = PyUnicode_FromString("board");
-    PyObject* module = PyImport_Import(module_name);
-    Py_DECREF(module_name);
-
-    PyObject* display_board_func = PyObject_GetAttrString(object, "draw_board");
-    if (!display_board_func || !PyCallable_Check(display_board_func)) {
-        if (PyErr_Occurred()) PyErr_Print();
-        fprintf(stderr, "Cannot find function 'display_board'\n");
-        return -1;
-    }
-    */
-    /*
     vector<vector<Position>> gameState = generateGameState(4, 5);
     gameState = generateConnections(gameState);
 
@@ -1102,7 +1088,7 @@ int main() {
 
     gameState = randomPlacingPhase(player1, player2, gameState);
 
-    cout << "check heuristic 5: " << heuristic_5_neighbours(player1, gameState) << endl;
+    //cout << "check heuristic 5: " << heuristic_5_neighbours(player1, gameState) << endl;
 
     Node* node = new Node(player1, player2, gameState);
     node->setPai(nullptr);
@@ -1111,10 +1097,9 @@ int main() {
     int mode, computer_difficulty_1 = 0, computer_difficulty_2 = 0;
     get_game_options(mode, computer_difficulty_1, computer_difficulty_2);
 
-
     switch (mode) {
         case 1:
-            p_vs_p_gameloop(node, object);
+            p_vs_p_gameloop(node);
             break;
         case 2:
             int turn;
@@ -1123,15 +1108,15 @@ int main() {
                 cin >> turn;
                 cout << endl;
             } while( turn != 0 && turn != 1);
-            p_vs_bot_gameloop(node, computer_difficulty_1, turn, object);
+            p_vs_bot_gameloop(node, computer_difficulty_1, turn);
             break;
         case 3:
-            bot_vs_bot_gameloop(node, computer_difficulty_1, computer_difficulty_2, object);
+            bot_vs_bot_gameloop(node, computer_difficulty_1, computer_difficulty_2);
             break;
         default:
             break;
     }
-    */
+
 
     Py_Finalize(); // clean up the Python interpreter
 

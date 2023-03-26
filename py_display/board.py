@@ -1,12 +1,6 @@
 import math
 import pygame
 
-import os
-
-current_file_path = os.path.realpath(__file__)
-
-print(current_file_path)
-
 pygame.init()
 
 # Set up the drawing window
@@ -14,7 +8,6 @@ SCREEN_WIDTH = 900
 SCREEN_HEIGHT = 700
 screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
 screen.fill((255, 140, 0))
-
 
 def draw_pieces(pts, size, player):
     if player == 1:
