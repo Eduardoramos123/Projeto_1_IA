@@ -870,7 +870,7 @@ void p_vs_p_gameloop(Node* node) {
     }
 }
 
-void p_vs_bot_gameloop(Node* node, int depth, int turn) {
+void p_vs_bot_gameloop(Node* node, int depth, int turn, PyObject* draw_board_func) {
     printGameState(node->getGameState());
     int player_turn = turn;
 
@@ -927,6 +927,20 @@ void p_vs_bot_gameloop(Node* node, int depth, int turn) {
             v.push_back(convertGameSate(node->getGameState()));
 
             //printGameState(node->getGameState());
+            vector<vector<char>> positions = getSymbols(node->getGameState());
+
+            // Convert the 2D vector to a Python list of lists
+            PyObject* pyPositions = PyList_New(positions.size());
+            for (int i = 0; i < positions.size(); i++) {
+                PyObject* pyRow = PyList_New(positions[i].size());
+                for (int j = 0; j < positions[i].size(); j++) {
+                    PyList_SetItem(pyRow, j, PyUnicode_FromFormat("%c", positions[i][j]));
+                }
+                PyList_SetItem(pyPositions, i, pyRow);
+            }
+
+            // Call the Python function with the Python object as argument
+            PyObject* result = PyObject_CallObject(draw_board_func, pyPositions);
 
 
             if (heuristic_stuck(node->getAI(), node->getGameState())) {
@@ -1066,7 +1080,9 @@ int main() {
     // Import the board module
     PyObject* board_module = PyImport_ImportModule("board");
 
-    // Get a reference to the draw_board function
+    // Get a reference to the board.py functions
+    PyObject* menu_func = PyObject_GetAttrString(board_module, "get_game_options");
+    PyObject* get_turn_func = PyObject_GetAttrString(board_module, "get_turn");
     PyObject* draw_board_func = PyObject_GetAttrString(board_module, "draw_board");
 
     vector<vector<Position>> gameState = generateGameState(4, 5);
@@ -1095,26 +1111,27 @@ int main() {
 
     cout << "------------- Welcome to Bound! -------------" << endl;
     int mode, computer_difficulty_1 = 0, computer_difficulty_2 = 0;
-    get_game_options(mode, computer_difficulty_1, computer_difficulty_2);
+    //get_game_options(mode, computer_difficulty_1, computer_difficulty_2);
+    PyObject* result = PyObject_CallObject(menu_func, NULL);
+    mode = PyLong_AsLong(PyList_GetItem(result, 0));
+    computer_difficulty_1 = PyLong_AsLong(PyList_GetItem(result, 1));
+    computer_difficulty_2 = PyLong_AsLong(PyList_GetItem(result, 2));
 
     switch (mode) {
         case 1:
             p_vs_p_gameloop(node);
             break;
         case 2:
+            PyObject* result_turn = PyObject_CallObject(get_turn_func, NULL);
             int turn;
-            do {
-                cout << "Do you want to play first? Enter 1 for yes, 0 for no:";
-                cin >> turn;
-                cout << endl;
-            } while( turn != 0 && turn != 1);
-            p_vs_bot_gameloop(node, computer_difficulty_1, turn);
+            turn = PyLong_AsLong(result);
+            p_vs_bot_gameloop(node, computer_difficulty_1, turn, draw_board_func);
             break;
-        case 3:
+        /*case 3:
             bot_vs_bot_gameloop(node, computer_difficulty_1, computer_difficulty_2);
             break;
         default:
-            break;
+            break;*/
     }
 
 
