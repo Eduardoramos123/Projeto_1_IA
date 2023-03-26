@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/projeto_1_IA.dir/main.cpp.obj"
+  "CMakeFiles/projeto_1_IA.dir/main.cpp.obj.d"
   "libprojeto_1_IA.dll.a"
   "projeto_1_IA.exe"
   "projeto_1_IA.exe.manifest"
