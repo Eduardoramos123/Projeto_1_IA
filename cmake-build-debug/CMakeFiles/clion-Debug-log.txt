@@ -1,22 +1,5 @@
-C:\Users\andre\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\223.8836.42\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DPYTHONLIBRARY=C:/Users/andre/AppData/Local/Programs/Python/Python311/include -G "CodeBlocks - MinGW Makefiles" -S "C:\Users\andre\OneDrive\Ambiente de Trabalho\feup\3ano\2semestre\IA\project1" -B "C:\Users\andre\OneDrive\Ambiente de Trabalho\feup\3ano\2semestre\IA\project1\cmake-build-debug"
--- The C compiler identification is GNU 11.2.0
--- The CXX compiler identification is GNU 11.2.0
--- Detecting C compiler ABI info
--- Detecting C compiler ABI info - done
--- Check for working C compiler: C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/bin/gcc.exe - skipped
--- Detecting C compile features
--- Detecting C compile features - done
--- Detecting CXX compiler ABI info
--- Detecting CXX compiler ABI info - done
--- Check for working CXX compiler: C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/bin/g++.exe - skipped
--- Detecting CXX compile features
--- Detecting CXX compile features - done
+C:\Users\andre\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\223.8836.42\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S "C:\Users\andre\OneDrive\Ambiente de Trabalho\feup\3ano\2semestre\IA\project1" -B "C:\Users\andre\OneDrive\Ambiente de Trabalho\feup\3ano\2semestre\IA\project1\cmake-build-debug"
+-- Found PythonLibs: C:/Users/andre/AppData/Local/Programs/Python/Python311/libs/python311.lib (found version "3.11.2") 
 -- Configuring done
 -- Generating done
-CMake Warning:
-  Manually-specified variables were not used by the project:
-
-    PYTHONLIBRARY
-
-
 -- Build files have been written to: C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/cmake-build-debug

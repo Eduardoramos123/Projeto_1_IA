@@ -24,6 +24,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="C:/Users/andre/AppData/Local/Programs/Python/Python311/include"/>
 					<Add directory="C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++"/>
 					<Add directory="C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32"/>
 					<Add directory="C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward"/>
@@ -46,6 +47,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add directory="C:/Users/andre/AppData/Local/Programs/Python/Python311/include"/>
 					<Add directory="C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++"/>
 					<Add directory="C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/x86_64-w64-mingw32"/>
 					<Add directory="C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/backward"/>
@@ -82,6 +84,24 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/Node.cpp">
+			<Option target="projeto_1_IA"/>
+		</Unit>
+		<Unit filename="C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/Node.h">
+			<Option target="projeto_1_IA"/>
+		</Unit>
+		<Unit filename="C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/Piece.cpp">
+			<Option target="projeto_1_IA"/>
+		</Unit>
+		<Unit filename="C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/Piece.h">
+			<Option target="projeto_1_IA"/>
+		</Unit>
+		<Unit filename="C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/Position.cpp">
+			<Option target="projeto_1_IA"/>
+		</Unit>
+		<Unit filename="C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/Position.h">
+			<Option target="projeto_1_IA"/>
+		</Unit>
 		<Unit filename="C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/main.cpp">
 			<Option target="projeto_1_IA"/>
 		</Unit>

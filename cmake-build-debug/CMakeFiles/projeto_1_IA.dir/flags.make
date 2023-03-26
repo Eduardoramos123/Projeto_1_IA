@@ -4,7 +4,7 @@
 # compile CXX with C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.8836.42/bin/mingw/bin/g++.exe
 CXX_DEFINES = 
 
-CXX_INCLUDES = 
+CXX_INCLUDES = @CMakeFiles/projeto_1_IA.dir/includes_CXX.rsp
 
 CXX_FLAGS = -g -fdiagnostics-color=always -std=gnu++14
 

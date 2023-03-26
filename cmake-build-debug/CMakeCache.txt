@@ -247,8 +247,14 @@ CMAKE_STRIP:FILEPATH=C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/c
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
-//No help, variable specified on the command line.
-PYTHONLIBRARY:UNINITIALIZED=C:/Users/andre/AppData/Local/Programs/Python/Python311/include
+//Path to a library.
+PYTHON_DEBUG_LIBRARY:FILEPATH=PYTHON_DEBUG_LIBRARY-NOTFOUND
+
+//Path to a file.
+PYTHON_INCLUDE_DIR:PATH=C:/Users/andre/AppData/Local/Programs/Python/Python311/include
+
+//Path to a library.
+PYTHON_LIBRARY_DEBUG:FILEPATH=PYTHON_LIBRARY_DEBUG-NOTFOUND
 
 //Value Computed by CMake
 projeto_1_IA_BINARY_DIR:STATIC=C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/cmake-build-debug
@@ -424,6 +430,14 @@ CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 CMAKE_STRIP-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding PythonLibs
+FIND_PACKAGE_MESSAGE_DETAILS_PythonLibs:INTERNAL=[C:/Users/andre/AppData/Local/Programs/Python/Python311/libs/python311.lib][C:/Users/andre/AppData/Local/Programs/Python/Python311/include][v3.11.2()]
+//ADVANCED property for variable: PYTHON_DEBUG_LIBRARY
+PYTHON_DEBUG_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PYTHON_INCLUDE_DIR
+PYTHON_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PYTHON_LIBRARY_DEBUG
+PYTHON_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
 //linker supports push/pop state
 _CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 
