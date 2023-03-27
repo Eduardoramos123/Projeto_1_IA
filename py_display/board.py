@@ -54,7 +54,7 @@ def draw_board(positions):
   radius += 50
   for k in range(1, num_layers):
     if (k == num_layers-1):
-      pygame.draw.circle(screen, (255, 253, 208), center, radius, 5)
+      pygame.draw.circle(screen, (255, 253, 208), center, radius-radius/8, 5)
     if ((k-1)%2 == 0):
       pts2 = create_points(num_positions, SCREEN_X//2-radius/2, SCREEN_Y//2-radius*(2/3), radius)
       #pygame.draw.polygon(screen, (255, 253, 208), pts2, 5) #width=5
@@ -70,6 +70,47 @@ def draw_board(positions):
         if m < (num_positions-1):
           pygame.draw.line(screen, (255, 253, 208), points[k*num_positions+m+1], points[num_positions+m], 5)
     radius += 50
+  
+  """
+  pts2 = create_points(num_positions, SCREEN_X//2-radius/2, SCREEN_Y//2-radius*(2/3), radius)
+  pygame.draw.line(screen, (255, 253, 208), points[0], points[5], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[1], points[6], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[2], points[7], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[3], points[8], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[4], points[9], 5)
+  
+  radius+=50
+  pts3 = create_points(num_positions, SCREEN_X//2-radius/2, SCREEN_Y//2-radius*(2/3), radius)
+  pts4 = rotate(pts3, math.pi/num_layers, center)
+  
+  #pygame.draw.polygon(screen, (255, 253, 208), pts4, 5)
+
+  pygame.draw.line(screen, (255, 253, 208), points[10], points[5], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[11], points[6], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[12], points[7], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[13], points[8], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[14], points[9], 5)
+  
+  pygame.draw.line(screen, (255, 253, 208), points[10], points[9], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[11], points[5], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[12], points[6], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[13], points[7], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[14], points[8], 5)
+  
+  radius+=50
+  pts5 =  create_points(num_positions, SCREEN_X//2-radius/2, SCREEN_Y//2-radius*(2/3), radius)
+  pts6 = rotate(pts5, math.pi/num_layers, center)
+  
+  #pygame.draw.polygon(screen, (255, 253, 208), pts4, 5)
+
+  pygame.draw.line(screen, (255, 253, 208), points[10], points[15], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[11], points[16], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[12], points[17], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[13], points[18], 5)
+  pygame.draw.line(screen, (255, 253, 208), points[14], points[19], 5)
+
+  pygame.draw.circle(screen, (255, 253, 208), center, radius-(radius/8), 5)
+  """
 
   # Draw the pieces for player1
   draw_pieces(pts1[0], 1)
@@ -90,7 +131,24 @@ def draw_board(positions):
     
   # Update display
   pygame.display.flip()
-        
+
+"""   
+# Run until the user asks to quit
+running = True
+while running:
+  # Did the user click the window close button?
+  for event in pygame.event.get():
+      if event.type == pygame.QUIT:
+        running = False
+  # Draw Game Board
+  draw_board([(0, 0), (0, 1), (0, 2), (0, 3),(0, 4),(0, 5), 
+               (1, 0), (1, 1), (1, 2), (1, 3),(1, 4),(1, 5),
+               (2, 0), (2, 1), (2, 2), (2, 3),(2, 4),(2, 5),
+               (3, 0), (3, 1), (3, 2), (3, 3),(3, 4),(3, 5)])
+  
+  # Flip the display
+  pygame.display.flip()
+  """
 
 def quit():   
   # Done! Time to quit.
