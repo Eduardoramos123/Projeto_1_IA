@@ -1,0 +1,5 @@
+C:\Users\andre\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\223.8836.42\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S "C:\Users\andre\OneDrive\Ambiente de Trabalho\feup\3ano\2semestre\IA\project1" -B "C:\Users\andre\OneDrive\Ambiente de Trabalho\feup\3ano\2semestre\IA\project1\cmake-build-debug"
+-- Found PythonLibs: C:/Users/andre/AppData/Local/Programs/Python/Python311/libs/python311.lib (found version "3.11.2") 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/cmake-build-debug
