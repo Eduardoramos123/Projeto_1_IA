@@ -12,10 +12,11 @@
 #include "Piece.h"
 
 #include <Python.h>
+#include <limits>
+#include <sstream>
 
 
 using namespace std;
-
 
 vector<vector<Position>> generateGameState(int level, int pos) {
     vector<vector<Position>> gameState;
@@ -769,7 +770,7 @@ int switch_difficulty(int difficulty) {
     }
 }
 
-vector<vector<Position>> choose_piece_to_move(int turn, int& level, int& pos, vector<vector<Position>> gameState) {
+vector<vector<Position>> choose_piece_to_move(int turn, int& level, int& pos, vector<vector<Position>> gameState, PyObject* board_module, string turn_str) {
     char p;
     if (turn)
         p = 'x';
@@ -778,19 +779,47 @@ vector<vector<Position>> choose_piece_to_move(int turn, int& level, int& pos, ve
 
     int lin, col;
 
+    PyObject* get_piece_func = PyObject_GetAttrString(board_module, "get_piece");
+    PyObject* get_pos_func = PyObject_GetAttrString(board_module, "get_pos");
+    PyObject* print_warnings = PyObject_GetAttrString(board_module, "print_warnings");
+    PyObject* print_turn = PyObject_GetAttrString(board_module, "print_turn");
+
+    vector<vector<char>> positions = getSymbols(gameState);
+
+    // Convert the 2D vector to a Python list of lists
+    PyObject* pyPositions = PyList_New(positions.size());
+    for (int i = 0; i < positions.size(); i++) {
+        PyObject* pyRow = PyList_New(positions[i].size());
+        for (int j = 0; j < positions[i].size(); j++) {
+            PyList_SetItem(pyRow, j, PyUnicode_FromFormat("%c", positions[i][j]));
+        }
+        PyList_SetItem(pyPositions, i, pyRow);
+    }
+
+    PyObject* args = PyTuple_New(1);
+    PyTuple_SetItem(args, 0, pyPositions);
+
     // Ask the user to enter the row and column of the piece to move
     while(true) {
-        cout << "Player " << turn << ", enter the row and column of the piece you want to move (lin and col -> [0.." << gameState.size()-1 << "] e.g. 1 2):";
-        cin >> lin >> col;
+        PyObject_CallObject(print_turn, Py_BuildValue("(s)", turn_str.c_str()));
+        PyObject* result = PyObject_CallObject(get_piece_func, args);
+        lin = PyLong_AsLong(PyList_GetItem(result, 0));
+        col = PyLong_AsLong(PyList_GetItem(result, 1));
 
-        // If no piece was found, ask the user to try again
-        if(gameState[lin][col].getPiece().getSym() != p) {
-            cout << "Piece not found. Please try again." << endl << endl;
+        if(lin < 0 || lin >= gameState.size() || col < 0 || col >= gameState[0].size()){
+            PyObject_CallObject(print_warnings, Py_BuildValue("(s)", "Input out of bounds! (press SPACE)"));
             continue;
         }
 
-        cout << "To which position? (lin and col -> [0.." << gameState.size()-1 << "] e.g. 1 2):";
-        cin >> level >> pos;
+        // If no piece was found, ask the user to try again
+        if(gameState[lin][col].getPiece().getSym() != p) {
+            PyObject_CallObject(print_warnings, Py_BuildValue("(s)", "Piece not found. Please try again. (press SPACE)"));
+            continue;
+        }
+
+        result = PyObject_CallObject(get_pos_func, NULL);
+        level = PyLong_AsLong(PyList_GetItem(result, 0));
+        pos = PyLong_AsLong(PyList_GetItem(result, 1));
 
         if(canMove(lin, col, level, pos, gameState))
             break;
@@ -799,17 +828,15 @@ vector<vector<Position>> choose_piece_to_move(int turn, int& level, int& pos, ve
     return move(gameState[lin][col].getPiece(), level, pos, gameState);
 }
 
-void p_vs_p_gameloop(Node* node) {
-    printGameState(node->getGameState());
+void p_vs_p_gameloop(Node* node, PyObject* board_module) {
     int turn = 1;
+    PyObject* print_string = PyObject_GetAttrString(board_module, "print_string");
 
     while (true) {
         if (turn) {
-            cout << endl << "Player 1"<<endl;
-
             // player move
             int level, pos;
-            vector<vector<Position>> newGameState = choose_piece_to_move(turn, level, pos, node->getGameState());
+            vector<vector<Position>> newGameState = choose_piece_to_move(turn, level, pos, node->getGameState(), board_module, "Player 1");
             node->setGameState(newGameState);
 
             vector<Piece> newPieces;
@@ -821,25 +848,21 @@ void p_vs_p_gameloop(Node* node) {
             }
             node->setAI(newPieces);
 
-            printGameState(node->getGameState());
-
             if (heuristic_stuck(node->getAI(), node->getGameState())) {
-                cout << "Player 2 WON!" << endl;
+                PyObject_CallObject(print_string, Py_BuildValue("(s)", "Player 1 Won! (press SPACE)"));
                 break;
             }
             if (heuristic_stuck(node->getPlayer(), node->getGameState())) {
-                cout << "Player 1 WON!" << endl;
+                PyObject_CallObject(print_string, Py_BuildValue("(s)", "Player 2 Won! (press SPACE)"));
                 break;
             }
 
             turn = 0;
         }
         else {
-            cout << endl << "Player 2"<<endl;
-
             // player move
             int level, pos;
-            vector<vector<Position>> newGameState = choose_piece_to_move(turn, level, pos, node->getGameState());
+            vector<vector<Position>> newGameState = choose_piece_to_move(turn, level, pos, node->getGameState(), board_module, "Player 2");
             node->setGameState(newGameState);
 
             vector<Piece> newPieces;
@@ -851,14 +874,12 @@ void p_vs_p_gameloop(Node* node) {
             }
             node->setPlayer(newPieces);
 
-            printGameState(node->getGameState());
-
             if (heuristic_stuck(node->getAI(), node->getGameState())) {
-                cout << "Player 2 WON!" << endl;
+                PyObject_CallObject(print_string, Py_BuildValue("(s)", "Player 1 Won! (press SPACE)"));
                 break;
             }
             if (heuristic_stuck(node->getPlayer(), node->getGameState())) {
-                cout << "Player 1 WON!" << endl;
+                PyObject_CallObject(print_string, Py_BuildValue("(s)", "Player 2 Won! (press SPACE)"));
                 break;
             }
 
@@ -867,20 +888,20 @@ void p_vs_p_gameloop(Node* node) {
     }
 }
 
-void p_vs_bot_gameloop(Node* node, int depth, int turn) {
-    printGameState(node->getGameState());
+void p_vs_bot_gameloop(Node* node, int depth, int turn, PyObject* board_module) {
     int player_turn = turn;
-
     vector<vector<char>> v;
+
+    PyObject* print_string = PyObject_GetAttrString(board_module, "print_string");
+    PyObject* print_turn = PyObject_GetAttrString(board_module, "print_turn");
+    PyObject* draw_board = PyObject_GetAttrString(board_module, "draw_board");
 
     while (true) {
         if (turn) {
-            cout << endl << "Player" << endl;
-
             // player move
             int level, pos;
 
-            vector<vector<Position>> newGameState = choose_piece_to_move(player_turn, level, pos, node->getGameState());
+            vector<vector<Position>> newGameState = choose_piece_to_move(player_turn, level, pos, node->getGameState(), board_module, "Player");
 
             node->setGameState(newGameState);
 
@@ -899,22 +920,35 @@ void p_vs_bot_gameloop(Node* node, int depth, int turn) {
 
             v.push_back(convertGameSate(node->getGameState()));
 
-
-            printGameState(node->getGameState());
-
             if (heuristic_stuck(node->getAI(), node->getGameState())) {
-                cout << "Computer WON!" << endl;
+                PyObject_CallObject(print_string, Py_BuildValue("(s)", "Computer Won! (press SPACE)"));
                 break;
             }
             if (heuristic_stuck(node->getPlayer(), node->getGameState())) {
-                cout << "Player WON!" << endl;
+                PyObject_CallObject(print_string, Py_BuildValue("(s)", "Player Won! (press SPACE)"));
                 break;
             }
 
             turn = 0;
         }
         else {
-            cout << endl << "Computer" << endl;
+            PyObject_CallObject(print_turn, Py_BuildValue("(s)", "Computer"));
+
+            vector<vector<char>> positions = getSymbols(node->getGameState());
+
+            // Convert the 2D vector to a Python list of lists
+            PyObject* pyPositions = PyList_New(positions.size());
+            for (int i = 0; i < positions.size(); i++) {
+                PyObject* pyRow = PyList_New(positions[i].size());
+                for (int j = 0; j < positions[i].size(); j++) {
+                    PyList_SetItem(pyRow, j, PyUnicode_FromFormat("%c", positions[i][j]));
+                }
+                PyList_SetItem(pyPositions, i, pyRow);
+            }
+
+            PyObject* args = PyTuple_New(1);
+            PyTuple_SetItem(args, 0, pyPositions);
+            PyObject_CallObject(draw_board, args);
 
             if (player_turn)
                 node = minimax(node, 0, depth, false, -1000000, 1000000, v);
@@ -922,16 +956,13 @@ void p_vs_bot_gameloop(Node* node, int depth, int turn) {
                 node = minimax(node, 0, depth, true, -1000000, 1000000, v);
 
             v.push_back(convertGameSate(node->getGameState()));
-            printGameState(node->getGameState());
-
-            // atualize node->getPlayer() (player 2)
 
             if (heuristic_stuck(node->getAI(), node->getGameState())) {
-                cout << "Computer WON!" << endl;
+                PyObject_CallObject(print_string, Py_BuildValue("(s)", "Computer Won! (press SPACE)"));
                 break;
             }
             if (heuristic_stuck(node->getPlayer(), node->getGameState())) {
-                cout << "Player WON!" << endl;
+                PyObject_CallObject(print_string, Py_BuildValue("(s)", "Player Won! (press SPACE)"));
                 break;
             }
 
@@ -940,53 +971,75 @@ void p_vs_bot_gameloop(Node* node, int depth, int turn) {
     }
 }
 
-void bot_vs_bot_gameloop(Node* node, int depth_1, int depth_2) {
-    printGameState(node->getGameState());
-
+void bot_vs_bot_gameloop(Node* node, int depth_1, int depth_2, PyObject* board_module) {
     vector<vector<char>> v;
 
-    while (true) {
+    PyObject* print_string = PyObject_GetAttrString(board_module, "print_string");
+    PyObject* print_turn = PyObject_GetAttrString(board_module, "print_turn");
+    PyObject* draw_board = PyObject_GetAttrString(board_module, "draw_board");
 
-        cout << endl << "Computer 1" << endl;
-        cout << "v size: " << v.size() << endl;
+    while (true) {
+        PyObject_CallObject(print_turn, Py_BuildValue("(s)", "Computer 1"));
+
+        vector<vector<char>> positions = getSymbols(node->getGameState());
+
+        // Convert the 2D vector to a Python list of lists
+        PyObject* pyPositions = PyList_New(positions.size());
+        for (int i = 0; i < positions.size(); i++) {
+            PyObject* pyRow = PyList_New(positions[i].size());
+            for (int j = 0; j < positions[i].size(); j++) {
+                PyList_SetItem(pyRow, j, PyUnicode_FromFormat("%c", positions[i][j]));
+            }
+            PyList_SetItem(pyPositions, i, pyRow);
+        }
+
+        PyObject* args = PyTuple_New(1);
+        PyTuple_SetItem(args, 0, pyPositions);
+        PyObject_CallObject(draw_board, args);
 
         node = minimax(node, 0, depth_1, true, -1000000, 1000000, v);
         v.push_back(convertGameSate(node->getGameState()));
 
         node->setEval(aval_AI(node->getAI(), node->getPlayer(), node->getGameState()));
-        cout << "Aval Player 1: " << node->getEval() << endl;
-
-        printGameState(node->getGameState());
-
-        // atualize node->getAI() (player 1)
 
         if (heuristic_stuck(node->getAI(), node->getGameState())) {
-            cout << "Computer 2 WON!" << endl;
+            PyObject_CallObject(print_string, Py_BuildValue("(s)", "Computer 2 Won! (press SPACE)"));
             break;
         }
         if (heuristic_stuck(node->getPlayer(), node->getGameState())) {
-            cout << "Computer 1 WON!" << endl;
+            PyObject_CallObject(print_string, Py_BuildValue("(s)", "Computer 1 Won! (press SPACE)"));
             break;
         }
 
-        cout << endl << "Computer 2" << endl;
+        PyObject_CallObject(print_turn, Py_BuildValue("(s)", "Computer 2"));
+
+        positions = getSymbols(node->getGameState());
+
+        // Convert the 2D vector to a Python list of lists
+        pyPositions = PyList_New(positions.size());
+        for (int i = 0; i < positions.size(); i++) {
+            PyObject* pyRow = PyList_New(positions[i].size());
+            for (int j = 0; j < positions[i].size(); j++) {
+                PyList_SetItem(pyRow, j, PyUnicode_FromFormat("%c", positions[i][j]));
+            }
+            PyList_SetItem(pyPositions, i, pyRow);
+        }
+
+        args = PyTuple_New(1);
+        PyTuple_SetItem(args, 0, pyPositions);
+        PyObject_CallObject(draw_board, args);
 
         node = minimax(node, 0, depth_2, false, -1000000, 1000000, v);
         v.push_back(convertGameSate(node->getGameState()));
 
         node->setEval(aval_Player(node->getPlayer(), node->getAI(), node->getGameState()));
-        cout << "Aval Player 2: " << node->getEval() << endl;
-
-        printGameState(node->getGameState());
-
-        // atualize node->getPlayer() (player 2)
 
         if (heuristic_stuck(node->getAI(), node->getGameState())) {
-            cout << "Computer 2 WON!" << endl;
+            PyObject_CallObject(print_string, Py_BuildValue("(s)", "Computer 2 Won! (press SPACE)"));
             break;
         }
         if (heuristic_stuck(node->getPlayer(), node->getGameState())) {
-            cout << "Computer 1 WON!" << endl;
+            PyObject_CallObject(print_string, Py_BuildValue("(s)", "Computer 1 Won! (press SPACE)"));
             break;
         }
     }
@@ -1003,9 +1056,8 @@ void get_game_options(int& mode, int& computer_difficulty_1, int& computer_diffi
         if (mode >= 1 && mode <= 3) {
             break;
         }
-        cout << "Invalid input. Please enter a number between 1 and 3." << endl;
     }
-
+    cout << endl << mode << endl;
     if (mode == 2 || mode == 3) {
         while (true) {
             cout << "Please select a difficulty level for the computer:" << endl;
@@ -1017,7 +1069,6 @@ void get_game_options(int& mode, int& computer_difficulty_1, int& computer_diffi
             if (computer_difficulty_1 >= 1 && computer_difficulty_1 <= 8) {
                 break;
             }
-            cout << "Invalid input. Please enter a number between 1 and 8." << endl;
         }
     }
 
@@ -1048,19 +1099,28 @@ void get_game_options(int& mode, int& computer_difficulty_1, int& computer_diffi
 
 int main() {
 
-    Py_Initialize(); // initialize the Python interpreter
-    PyObject* object = Py_BuildValue("s", "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\teste.py");
+    // initialization of py_game
+    Py_Initialize();
+    PyObject* object = Py_BuildValue("s", "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\py_display\\teste.py");
     FILE* file = _Py_fopen_obj(object, "r+");
 
     if(file){
-        PyRun_SimpleFile(file, "path/to/python/file");
+        PyRun_SimpleFile(file, "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\py_display\\teste.py");
         fclose(file);
     }
 
-    Py_Finalize(); // clean up the Python interpreter
+    PyObject* object2 = Py_BuildValue("s", "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\py_display\\board.py");
+    FILE* file2 = _Py_fopen_obj(object2, "r+");
 
+    if(file2){
+        PyRun_SimpleFile(file2, "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\py_display\\board.py");
+        fclose(file);
+    }
 
-    /*
+    // Import the board module
+    PyObject* board_module = PyImport_ImportModule("board");
+
+    // start of the c++ code
     vector<vector<Position>> gameState = generateGameState(4, 5);
     gameState = generateConnections(gameState);
 
@@ -1080,36 +1140,39 @@ int main() {
 
     gameState = randomPlacingPhase(player1, player2, gameState);
 
-    cout << "check heuristic 5: " << heuristic_5_neighbours(player1, gameState) << endl;
-
     Node* node = new Node(player1, player2, gameState);
     node->setPai(nullptr);
 
-    cout << "------------- Welcome to Bound! -------------" << endl;
-    int mode, computer_difficulty_1 = 0, computer_difficulty_2 = 0;
-    get_game_options(mode, computer_difficulty_1, computer_difficulty_2);
+    int mode, computer_difficulty_1 = 0, computer_difficulty_2 = 0, turn;
 
+    // Get a reference to the board.py functions
+    PyObject* menu_func = PyObject_GetAttrString(board_module, "get_game_options");
+    PyObject* result = PyObject_CallObject(menu_func, NULL);
+    mode = PyLong_AsLong(PyList_GetItem(result, 0));
+    computer_difficulty_1 = PyLong_AsLong(PyList_GetItem(result, 1));
+    if(mode == 3) {
+        computer_difficulty_2 = PyLong_AsLong(PyList_GetItem(result, 2));
+    }
 
     switch (mode) {
         case 1:
-            p_vs_p_gameloop(node);
+            p_vs_p_gameloop(node, board_module);
             break;
         case 2:
-            int turn;
-            do {
-                cout << "Do you want to play first? Enter 1 for yes, 0 for no:";
-                cin >> turn;
-                cout << endl;
-            } while( turn != 0 && turn != 1);
-            p_vs_bot_gameloop(node, computer_difficulty_1, turn);
+            turn = PyLong_AsLong(PyList_GetItem(result, 2));
+            p_vs_bot_gameloop(node, computer_difficulty_1, turn, board_module);
             break;
         case 3:
-            bot_vs_bot_gameloop(node, computer_difficulty_1, computer_difficulty_2);
+            bot_vs_bot_gameloop(node, computer_difficulty_1, computer_difficulty_2, board_module);
             break;
         default:
             break;
     }
-    */
+
+    PyObject* exit = PyObject_GetAttrString(board_module, "exit_function");
+    PyObject_CallObject(exit, NULL);
+
+    Py_Finalize(); // clean up the Python interpreter
 
     return 0;
 }

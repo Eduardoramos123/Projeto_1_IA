@@ -1,8 +1,12 @@
 file(REMOVE_RECURSE
   "CMakeFiles/projeto_1_IA.dir/Node.cpp.obj"
+  "CMakeFiles/projeto_1_IA.dir/Node.cpp.obj.d"
   "CMakeFiles/projeto_1_IA.dir/Piece.cpp.obj"
+  "CMakeFiles/projeto_1_IA.dir/Piece.cpp.obj.d"
   "CMakeFiles/projeto_1_IA.dir/Position.cpp.obj"
+  "CMakeFiles/projeto_1_IA.dir/Position.cpp.obj.d"
   "CMakeFiles/projeto_1_IA.dir/main.cpp.obj"
+  "CMakeFiles/projeto_1_IA.dir/main.cpp.obj.d"
   "libprojeto_1_IA.dll.a"
   "projeto_1_IA.exe"
   "projeto_1_IA.exe.manifest"
