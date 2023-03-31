@@ -1,4 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/projeto_1_IA.dir/Game.cpp.obj"
+  "CMakeFiles/projeto_1_IA.dir/Game.cpp.obj.d"
+  "CMakeFiles/projeto_1_IA.dir/Heuristics.cpp.obj"
+  "CMakeFiles/projeto_1_IA.dir/Heuristics.cpp.obj.d"
   "CMakeFiles/projeto_1_IA.dir/Node.cpp.obj"
   "CMakeFiles/projeto_1_IA.dir/Node.cpp.obj.d"
   "CMakeFiles/projeto_1_IA.dir/Piece.cpp.obj"

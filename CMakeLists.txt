@@ -9,7 +9,7 @@ find_package(PythonLibs REQUIRED)
 # Add the Boost include path
 include_directories(${PYTHON_INCLUDE_DIRS})
 
-add_executable(projeto_1_IA main.cpp Node.cpp Node.h Position.cpp Position.h Piece.cpp Piece.h)
+add_executable(projeto_1_IA main.cpp Node.cpp Node.h Position.cpp Position.h Piece.cpp Piece.h Heuristics.cpp Heuristics.h Heuristics.cpp Game.cpp Game.h)
 
 # Link your executable with the Boost libraries
 target_include_directories(projeto_1_IA PRIVATE ${PYTHON_INCLUDE_DIRS})
