@@ -655,19 +655,19 @@ int main() {
 
     // initialization of py_game
     Py_Initialize();
-    PyObject* object = Py_BuildValue("s", R"(C:\Users\andre\OneDrive\Ambiente de Trabalho\feup\3ano\2semestre\IA\project1\py_display\teste.py)");
+    PyObject* object = Py_BuildValue("s", R"(path\to\py_display\teste.py)");
     FILE* file = _Py_fopen_obj(object, "r+");
 
     if(file){
-        PyRun_SimpleFile(file, "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\py_display\\teste.py");
+        PyRun_SimpleFile(file, "path\\to\\py_display\\teste.py");
         fclose(file);
     }
 
-    PyObject* object2 = Py_BuildValue("s", R"(C:\Users\andre\OneDrive\Ambiente de Trabalho\feup\3ano\2semestre\IA\project1\py_display\board.py)");
+    PyObject* object2 = Py_BuildValue("s", R"(path\tog\py_display\board.py)");
     FILE* file2 = _Py_fopen_obj(object2, "r+");
 
     if(file2){
-        PyRun_SimpleFile(file2, "C:\\Users\\andre\\OneDrive\\Ambiente de Trabalho\\feup\\3ano\\2semestre\\IA\\project1\\py_display\\board.py");
+        PyRun_SimpleFile(file2, "path\\to\\py_display\\board.py");
         fclose(file);
     }
 
