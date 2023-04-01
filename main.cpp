@@ -16,6 +16,23 @@ using namespace std;
 Game* game = new Game();
 Heuristics* h = new Heuristics(game);
 
+/**
+ * Function name: generateGameState
+ *
+ * Input parameters:
+ * - level (int): the number of levels (rows) in the game state
+ * - pos (int): the number of positions (columns) in the game state
+ *
+ * Return value:
+ * - gameState (vector<vector<Position>>): a 2D vector of Position objects representing the initial game state
+ *
+ * Function description:
+ * This function generates the initial game state for a game board of a given number of levels (rows) and positions (columns).
+ * It does so by creating a 2D vector of Position objects and initializing each Position object with an empty Piece object.
+ * The Piece object represents a game piece that can be placed on the game board later.
+ * The Position objects are then stored in a vector, which is in turn stored in the 2D vector representing the game state.
+ * The function returns this 2D vector as the initial game state.
+ */
 vector<vector<Position>> generateGameState(int level, int pos) {
     vector<vector<Position>> gameState;
 
@@ -33,6 +50,24 @@ vector<vector<Position>> generateGameState(int level, int pos) {
     return gameState;
 }
 
+/**
+ * Function name: generateConnections
+ *
+ * Input parameters:
+ * - gameState (vector<vector<Position>>): a 2D vector of Position objects representing the game state
+ *
+ * Return value:
+ * - final (vector<vector<Position>>): a 2D vector of Position objects representing the game state with added neighbours
+ *
+ * Function description:
+ * This function takes a 2D vector of Position objects representing the game state and adds neighbours to each Position object
+ * based on its position in the game board. Neighbours are defined as Positions that are adjacent to the current Position, either
+ * horizontally, vertically, or diagonally.
+ * The function iterates through each Position object in the game state and checks its position in relation to the other Positions
+ * in the game board to determine its neighbours. Neighbours are then added to the current Position object using the addNeighbour()
+ * method defined for the Position class.
+ * The function returns the modified 2D vector of Position objects as the final game state with added neighbours.
+ */
 vector<vector<Position>> generateConnections(vector<vector<Position>> gameState) {
     vector<vector<Position>> final = gameState;
 
@@ -100,6 +135,24 @@ vector<vector<Position>> generateConnections(vector<vector<Position>> gameState)
     return final;
 }
 
+/**
+ * Function name: validGameState
+ *
+ * Input parameters:
+ * - gameState (vector<vector<Position>>): a 2D vector of Position objects representing the game state
+ *
+ * Return value:
+ * - true if the game state is valid, false otherwise
+ *
+ * Function description:
+ * This function takes a 2D vector of Position objects representing the game state and checks if each Position object has exactly
+ * three neighbours. A valid game state is one in which every Position object has exactly three neighbours, meaning it is connected
+ * to exactly three other Positions in the game board.
+ * The function iterates through each Position object in the game state and checks its number of neighbours using the getNeighbours()
+ * method defined for the Position class. If a Position object has a number of neighbours that is not equal to three, the function
+ * returns false immediately, indicating that the game state is not valid.
+ * If all Position objects have exactly three neighbours, the function returns true, indicating that the game state is valid.
+ */
 bool validGameState(vector<vector<Position>> gameState) {
     for (auto & i : gameState) {
         for (auto & j : i) {
@@ -111,6 +164,13 @@ bool validGameState(vector<vector<Position>> gameState) {
     return true;
 }
 
+/**
+ * Checks if a given position on a specific level of the game board is available to place a new piece.
+ * @param level an integer representing the level number (0-indexed) where the new piece will be placed.
+ * @param pos an integer representing the position number (0-indexed) where the new piece will be placed on the given level.
+ * @param gameState a 2D vector of Position objects representing the current state of the game board.
+ * @return Returns a boolean value of true or false. It returns true if the given position is empty and available to place a new piece. It returns false if the given position is already occupied by a piece.
+ */
 bool canPlace(int level, int pos, vector<vector<Position>> gameState) {
     if (gameState[level][pos].getPiece().getSym() != ' ') {
         return false;
@@ -118,6 +178,14 @@ bool canPlace(int level, int pos, vector<vector<Position>> gameState) {
     return true;
 }
 
+/**
+ * Places a given piece on a specific position on a specific level of the game board.
+ * @param piece a reference to a Piece object that will be placed on the board.
+ * @param level an integer representing the level number (0-indexed) where the piece will be placed.
+ * @param pos an integer representing the position number (0-indexed) where the piece will be placed on the given level.
+ * @param gameState a 2D vector of Position objects representing the current state of the game board.
+ * @return Returns a 2D vector of Position objects representing the updated state of the game board after placing the given piece on the specified position and level.
+ */
 vector<vector<Position>> place(Piece& piece, int level, int pos, vector<vector<Position>> gameState) {
     vector<vector<Position>> final = gameState;
 
@@ -125,6 +193,12 @@ vector<vector<Position>> place(Piece& piece, int level, int pos, vector<vector<P
     final[level][pos].setPiece(piece);
     return final;
 }
+
+/**
+ * Gets a 2D vector of characters representing the symbols of the pieces on the game board.
+ * @param gameState a 2D vector of Position objects representing the current state of the game board.
+ * @return Returns a 2D vector of characters representing the symbols of the pieces on the game board. If a position on the game board is empty, the corresponding character in the vector will be a space (' ').
+ */
 
 vector<vector<char>> getSymbols(vector<vector<Position>> gameState) {
     vector<vector<char>> final;
@@ -161,6 +235,13 @@ void printGameState(vector<vector<Position>> gameState) {
          << "-------[" << symbols[0][3] << "]-------------------[" << symbols[0][2] <<"]-------" << endl;
 }
 
+/**
+ * Executes the placing phase of the game for the player. Allows the player to place their pieces on the bottom level of the game board, while placing the corresponding adversary pieces on the top level.
+ * @param player_pieces a vector of Piece objects representing the player's pieces.
+ * @param adv_pieces a vector of Piece objects representing the adversary's pieces.
+ * @param gameState a 2D vector of Position objects representing the current state of the game board.
+ * @return Returns a 2D vector of Position objects representing the updated state of the game board after the player has placed all their pieces and the adversary has placed their corresponding pieces.
+ */
 vector<vector<Position>> playerPlacingPhase(vector<Piece>& player_pieces, vector<Piece>& adv_pieces, vector<vector<Position>> gameState) {
 
     vector<vector<Position>> final = gameState;
@@ -199,6 +280,13 @@ vector<vector<Position>> playerPlacingPhase(vector<Piece>& player_pieces, vector
     return final;
 }
 
+/**
+*This function randomly places the player's and the opponent's pieces on the game board during the placing phase of a game.
+*@param player_pieces A vector containing the player's pieces.
+*@param adv_pieces A vector containing the opponent's pieces.
+*@param gameState A 2D vector representing the current state of the game board.
+*@return A 2D vector representing the updated state of the game board after the player's and opponent's pieces have been randomly placed.
+*/
 vector<vector<Position>> randomPlacingPhase(vector<Piece>& player_pieces, vector<Piece>& adv_pieces, vector<vector<Position>> gameState) {
     vector<vector<Position>> final = gameState;
     int inc;
@@ -236,6 +324,11 @@ vector<vector<Position>> randomPlacingPhase(vector<Piece>& player_pieces, vector
     return final;
 }
 
+/**
+*This function converts a 2D vector representing the current state of the game board into a 1D vector of characters.
+*@param gameState A 2D vector representing the current state of the game board.
+*@return A 1D vector of characters representing the state of the game board.
+*/
 vector<char> convertGameSate(vector<vector<Position>> gameState) {
     vector<char> res;
 
@@ -247,6 +340,11 @@ vector<char> convertGameSate(vector<vector<Position>> gameState) {
     return res;
 }
 
+/**
+*This function checks if a given game state represented as a 2D vector has been visited before.
+*@param visited A 2D vector of characters representing the previously visited game states.
+*@param gameState A 2D vector representing the current state of the game board.
+*/
 bool isVisited(vector<vector<char>> visited, vector<vector<Position>> gameState) {
     vector<char> charState = convertGameSate(gameState);
 
@@ -259,6 +357,19 @@ bool isVisited(vector<vector<char>> visited, vector<vector<Position>> gameState)
     return false;
 }
 
+/**
+ * Minimax algorithm with alpha-beta pruning.
+ *
+ * @param node The current node being evaluated.
+ * @param depth The current depth of the search tree.
+ * @param maxDepth The maximum depth to be searched.
+ * @param AI A boolean flag indicating whether the current player is AI or not.
+ * @param alpha The best value that the maximizing player currently has available.
+ * @param beta The best value that the minimizing player currently has available.
+ * @param visited A vector of previously visited game states.
+ *
+ * @return The best move to be taken at the current node.
+ */
 Node* minimax(Node* node, int depth, int maxDepth, bool AI, int alpha, int beta, vector<vector<char>> visited) {
     if (depth == maxDepth || h->heuristic_stuck(node->getAI(), node->getGameState()) || h->heuristic_stuck(node->getPlayer(), node->getGameState())) {
         return node;
@@ -376,6 +487,17 @@ Node* minimax(Node* node, int depth, int maxDepth, bool AI, int alpha, int beta,
 
 }
 
+/**
+*Chooses the piece to move based on the current turn and user input.
+*
+*@param turn an integer indicating the current turn (0 for 'o' and 1 for 'x')
+*@param level a reference to an integer that will be updated with the chosen level to move the piece to
+*@param pos a reference to an integer that will be updated with the chosen position to move the piece to
+*@param gameState a vector of vector of Position objects representing the current game state
+*@param board_module a Python module containing the board functions
+*@param turn_str a string indicating the current turn ('o' or 'x')
+*@return a vector of vector of Position objects representing the updated game state after the piece has been moved
+*/
 vector<vector<Position>> choose_piece_to_move(int turn, int& level, int& pos, vector<vector<Position>> gameState, PyObject* board_module, string turn_str) {
     char p;
     if (turn)
@@ -434,6 +556,13 @@ vector<vector<Position>> choose_piece_to_move(int turn, int& level, int& pos, ve
     return game->move(gameState[lin][col].getPiece(), level, pos, gameState);
 }
 
+/**
+ * Plays a game between two human players in a loop.
+ *
+ * @param node Pointer to the root node of the game tree.
+ * @param board_module Pointer to the Python board module.
+ * @return void.
+ */
 void p_vs_p_gameloop(Node* node, PyObject* board_module) {
     int turn = 1;
     PyObject* print_string = PyObject_GetAttrString(board_module, "print_string");
@@ -494,6 +623,16 @@ void p_vs_p_gameloop(Node* node, PyObject* board_module) {
     }
 }
 
+/**
+ * Runs the game loop for player versus bot mode.
+ *
+ * @param node: Pointer to the root node of the game tree.
+ * @param depth: Maximum depth to search in the game tree.
+ * @param turn: Current turn of the game (1 if it's the player's turn, 0 if it's the bot's turn).
+ * @param board_module: Python module containing functions for printing the game board.
+ *
+ * @return: None.
+ */
 void p_vs_bot_gameloop(Node* node, int depth, int turn, PyObject* board_module) {
     int player_turn = turn;
     vector<vector<char>> v;
@@ -577,6 +716,21 @@ void p_vs_bot_gameloop(Node* node, int depth, int turn, PyObject* board_module) 
     }
 }
 
+/**
+*This function represents a game loop where two bots play against each other. The function takes four parameters:
+*
+*Node* node: A pointer to the current node in the game tree.
+*int depth_1: The maximum depth of the game tree that the first bot can explore.
+*int depth_2: The maximum depth of the game tree that the second bot can explore.
+*PyObject* board_module: A Python module that contains functions for printing the game board and other messages.
+*The function initializes a 2D vector representing the game board and calls several functions from the Python module to print the board and messages to the console. It then enters a loop where it alternates between the two bots making moves. In each iteration of the loop, the function:
+*
+*Calls minimax() to determine the best move for the current bot to make, based on the current state of the game.
+*Adds the new state of the game to the 2D vector representing the game board.
+*Checks if either bot has won or if the game has ended in a tie, and prints the appropriate message if so.
+*Alternates control to the other bot, and repeats the process.
+*The function has no return value.
+*/
 void bot_vs_bot_gameloop(Node* node, int depth_1, int depth_2, PyObject* board_module) {
     vector<vector<char>> v;
 

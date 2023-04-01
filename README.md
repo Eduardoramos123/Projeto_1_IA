@@ -21,5 +21,5 @@ Projeto de IA sobre pesquisa adversarial do jogo Bound
 > We are currently running the project in CLion. For you to be able to run it you need the following:
 >  - Have python installed (python311 version)
 >  - Put the full path to your python311.lib in the CmakeLists.txt file.
->  - Put the full path to the teste.py and board.py files in the main funtion of main.cpp. This step is necessary because we are using the pygame to illustrate hte game board and to interact with the User. So the main.cpp needs to get the content from both files to import the board.py module.
+>  - Put the full path to the teste.py and board.py files in the main funtion of main.cpp. This step is necessary because we are using the pygame to illustrate the game board and to interact with the User. So the main.cpp needs to get the content from both files to import the board.py module.
 >  - You need to have pygame installed too.

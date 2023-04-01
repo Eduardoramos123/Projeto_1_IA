@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1
+# Install script for directory: C:/Users/Eduardo/Desktop/IA_FINAL1/Projeto_1_IA
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -32,11 +32,6 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-# Set default install directory permissions.
-if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/Users/andre/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.174/bin/mingw/bin/objdump.exe")
-endif()
-
 if(CMAKE_INSTALL_COMPONENT)
   set(CMAKE_INSTALL_MANIFEST "install_manifest_${CMAKE_INSTALL_COMPONENT}.txt")
 else()
@@ -45,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/andre/OneDrive/Ambiente de Trabalho/feup/3ano/2semestre/IA/project1/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/Eduardo/Desktop/IA_FINAL1/Projeto_1_IA/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
